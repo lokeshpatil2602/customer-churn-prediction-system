@@ -1,5 +1,9 @@
 import streamlit as st
+import os
 from components import dashboard, train, predict, history
+
+# Base directory of this file (frontend/)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # ==================== CONFIGURATION ====================
 def initialize_app():
@@ -57,10 +61,9 @@ def initialize_session_state():
 # ==================== STYLING ====================
 def apply_custom_styles():
     """Apply custom CSS for professional sidebar styling"""
-    # Load CSS from external file
-    with open('static/style.css', 'r') as f:
+    css_path = os.path.join(BASE_DIR, 'static', 'style.css')
+    with open(css_path, 'r') as f:
         css_content = f.read()
-    
     st.markdown(f"<style>{css_content}</style>", unsafe_allow_html=True)
 
 # ==================== SIDEBAR ====================
