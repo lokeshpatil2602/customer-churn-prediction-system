@@ -1,0 +1,35 @@
+/* Customer Churn Prediction Dashboard - Professional Sidebar Styling */
+
+/* Main sidebar gradient background */
+.css-1d391kg {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Radio button navigation styling */
+.stRadio > div[data-baseweb="radio"] > div {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 8px 0;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+/* Hover effects for navigation */
+.stRadio > div[data-baseweb="radio"] > div:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateX(5px);
+}
+
+/* Text styling for navigation labels */
+.stRadio > div[data-baseweb="radio"] > div > label {
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Hide default radio button circles */
+.stRadio > div[data-baseweb="radio"] > div > label > div:first-child {
+    display: none;
+}
