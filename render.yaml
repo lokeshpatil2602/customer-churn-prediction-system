@@ -1,0 +1,26 @@
+services:
+  # ── Backend Flask API ──────────────────────────────────────────────
+  - type: web
+    name: churn-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.12.3
+
+  # ── Frontend Streamlit ─────────────────────────────────────────────
+  - type: web
+    name: churn-frontend
+    runtime: python
+    rootDir: frontend
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+    envVars:
+      - key: BACKEND_URL
+        value: https://churn-backend.onrender.com
+      - key: PYTHON_VERSION
+        value: 3.12.3
