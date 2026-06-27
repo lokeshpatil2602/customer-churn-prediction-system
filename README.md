@@ -1,6 +1,35 @@
 # Customer Churn Prediction System
 
-An intermediate-level machine learning project that predicts customer churn using two popular algorithms.
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-FF4B4B?logo=streamlit)](https://customer-churn-prediction-system-zzrjybcqzpeisadtys6ydt.streamlit.app)
+[![Backend API](https://img.shields.io/badge/Backend%20API-Railway-8B5CF6?logo=railway)](https://customer-churn-backend-production.up.railway.app)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?logo=github)](https://github.com/lokeshpatil2602/customer-churn-prediction-system)
+
+An intermediate-level machine learning project that predicts customer churn using two popular algorithms — deployed live with a Flask REST API backend and Streamlit frontend.
+
+---
+
+## 🚀 Live Demo
+
+| Service | URL |
+|---------|-----|
+| **Frontend (Streamlit)** | https://customer-churn-prediction-system-zzrjybcqzpeisadtys6ydt.streamlit.app |
+| **Backend API (Flask)** | https://customer-churn-backend-production.up.railway.app |
+
+### API Quick Test
+```bash
+# Health check
+curl https://customer-churn-backend-production.up.railway.app/
+
+# Model accuracy
+curl https://customer-churn-backend-production.up.railway.app/accuracy
+
+# Predict churn
+curl -X POST https://customer-churn-backend-production.up.railway.app/predict \
+  -H "Content-Type: application/json" \
+  -d '{"age": 25, "tenure": 3, "monthly_charges": 85.0}'
+```
+
+---
 
 ## What is Customer Churn Prediction?
 
@@ -9,192 +38,209 @@ Customer churn prediction helps businesses identify customers who are likely to 
 - Improve customer satisfaction
 - Reduce revenue loss
 
+---
+
 ## Technology Stack
 
 **Backend:**
 - Flask (Python web framework)
 - Scikit-learn (Machine Learning)
 - Pandas (Data processing)
+- Gunicorn (Production WSGI server)
+- Deployed on **Railway**
 
 **Frontend:**
 - Streamlit (Web interface)
+- Deployed on **Streamlit Community Cloud**
 
 **Machine Learning Models:**
 - Logistic Regression
 - Decision Tree
 
+---
+
 ## Project Structure
 
 ```
-customer-churn/
-|
-|-- backend/
-|   |-- app.py              # Flask API server
-|   |-- model.py            # Model training script
-|   |-- utils.py            # Helper functions
-|   |-- lr.pkl              # Logistic Regression model
-|   |-- dt.pkl              # Decision Tree model
-|   |-- accuracy.pkl        # Model accuracy scores
-|
-|-- frontend/
-|   |-- app.py              # Streamlit web interface
-|
-|-- dataset/
-|   |-- churn.csv           # Customer data
-|
-`-- README.md               # This file
+customer-churn-prediction-system/
+│
+├── backend/
+│   ├── app.py              # Flask API server
+│   ├── model.py            # Model training script
+│   ├── utils.py            # Helper functions
+│   ├── lr.pkl              # Logistic Regression model
+│   ├── dt.pkl              # Decision Tree model
+│   ├── accuracy.pkl        # Model accuracy scores
+│   ├── requirements.txt    # Backend dependencies
+│   ├── Procfile            # Deployment entrypoint
+│   ├── railway.toml        # Railway config
+│   └── test_backend.py     # Test suite (33 tests)
+│
+├── frontend/
+│   ├── app.py              # Streamlit web interface
+│   ├── config.py           # Backend URL config
+│   ├── requirements.txt    # Frontend dependencies
+│   ├── .streamlit/
+│   │   └── config.toml     # Streamlit theme config
+│   ├── static/
+│   │   └── style.css       # Custom styling
+│   └── components/
+│       ├── dashboard.py    # Dashboard page
+│       ├── predict.py      # Prediction page
+│       ├── train.py        # Model training page
+│       └── history.py      # Prediction history page
+│
+├── dataset/
+│   └── churn.csv           # Customer data
+│
+├── docker-compose.yml      # Run both services with Docker
+├── render.yaml             # Render deployment config
+└── README.md
 ```
+
+---
 
 ## Features
 
-### Backend (Flask API)
-- **Model Training**: Trains both Logistic Regression and Decision Tree
-- **Accuracy Calculation**: Shows model performance on test data
-- **REST API**: Provides prediction endpoints
-- **Helper Functions**: Simple data preprocessing
+### Dashboard
+- Live model accuracy metrics from the API
+- Churn vs Stay prediction bar charts
+- Model agreement analysis
+- Auto-updates with new predictions
 
-### Frontend (Streamlit)
-- **User Interface**: Clean and intuitive web form
-- **Real-time Predictions**: Instant results from both models
-- **Accuracy Display**: Shows model performance metrics
-- **Probability Charts**: Visual representation of churn probability
+### Predict
+- Enter customer details (age, tenure, monthly charges + 14 more fields)
+- Get predictions from both Logistic Regression and Decision Tree
+- Visual probability chart
+- Results saved to session history
+
+### Train Models
+- Upload your own CSV dataset
+- Retrain models with new data
+- Compare model accuracies
+- Active model auto-selected based on best accuracy
+
+### History
+- View all past predictions in a table
+- Summary statistics (total, churn, stay counts)
+- Clear history option
+
+---
 
 ## Machine Learning Models
 
 ### Logistic Regression
 - **Type**: Statistical classification algorithm
-- **How it works**: Predicts probability of churn using mathematical equation
 - **Advantage**: Provides probability scores, easy to interpret
 
 ### Decision Tree
 - **Type**: Tree-based classification algorithm
-- **How it works**: Makes decisions by asking questions about customer features
 - **Advantage**: Handles complex patterns, easy to visualize
 
-## How to Run the Project
-
-### Step 1: Install Dependencies
-```bash
-pip install flask streamlit scikit-learn pandas requests
-```
-
-### Step 2: Train Models
-```bash
-cd backend
-python model.py
-```
-This will:
-- Load the dataset
-- Train both models
-- Calculate accuracy
-- Save models as .pkl files
-
-### Step 3: Start Backend Server
-```bash
-cd backend
-python app.py
-```
-The Flask API will start on http://localhost:5000
-
-### Step 4: Start Frontend
-```bash
-cd frontend
-streamlit run app.py
-```
-The Streamlit app will open in your browser
+---
 
 ## API Endpoints
 
-### GET `/`
-Returns welcome message
+### `GET /`
+Returns welcome message.
 
-### GET `/accuracy`
-Returns model accuracy scores:
+### `GET /accuracy`
 ```json
 {
-  "logistic_regression": "0.85",
-  "decision_tree": "0.90"
+  "logistic_regression": "1.00",
+  "decision_tree": "1.00"
 }
 ```
 
-### POST `/predict`
-Accepts customer data and returns predictions:
+### `POST /predict`
+**Request:**
 ```json
-Request: {
+{
   "age": 30,
   "tenure": 12,
   "monthly_charges": 50.0
 }
-
-Response: {
+```
+**Response:**
+```json
+{
   "lr_prediction": 0,
   "dt_prediction": 1,
-  "probability": [0.7, 0.3]
+  "probability": [0.70, 0.30]
 }
 ```
 
+---
+
+## Run Locally
+
+### 1. Clone the repo
+```bash
+git clone https://github.com/lokeshpatil2602/customer-churn-prediction-system.git
+cd customer-churn-prediction-system
+```
+
+### 2. Install dependencies
+```bash
+pip install -r backend/requirements.txt
+pip install -r frontend/requirements.txt
+```
+
+### 3. Train models
+```bash
+cd backend
+python model.py
+```
+
+### 4. Start backend
+```bash
+cd backend
+python app.py
+# Flask API running at http://localhost:5000
+```
+
+### 5. Start frontend (new terminal)
+```bash
+cd frontend
+streamlit run app.py
+# Streamlit app at http://localhost:8501
+```
+
+### Run with Docker
+```bash
+docker-compose up --build
+```
+
+---
+
+## Run Tests
+```bash
+cd backend
+python test_backend.py
+```
+33 tests covering utils, model files, ML predictions, and all API endpoints.
+
+---
+
+## Deployment
+
+| Service | Platform | URL |
+|---------|----------|-----|
+| Backend (Flask API) | Railway | https://customer-churn-backend-production.up.railway.app |
+| Frontend (Streamlit) | Streamlit Cloud | https://customer-churn-prediction-system-zzrjybcqzpeisadtys6ydt.streamlit.app |
+
+The frontend reads `BACKEND_URL` from environment variables / Streamlit secrets, so it works both locally and in production without code changes.
+
+---
+
 ## Dataset Features
 
-The system uses three customer features:
-- **age**: Customer age (18-100)
-- **tenure**: How long customer has been with company (months)
-- **monthly_charges**: Monthly bill amount ($)
-
-**Target**: churn (0 = Stay, 1 = Churn)
-
-## Sample Usage
-
-1. Open the Streamlit app in your browser
-2. Enter customer information:
-   - Age: 35
-   - Tenure: 18 months
-   - Monthly Charges: $60
-3. Click "Predict"
-4. View results:
-   - Model predictions (Stay/Churn)
-   - Probability percentages
-   - Performance metrics
-
-## Model Performance
-
-The system shows accuracy for both models:
-- **Logistic Regression**: Typically 80-90% accuracy
-- **Decision Tree**: Typically 85-95% accuracy
-
-Accuracy is calculated on test data (20% of dataset) to ensure realistic performance.
-
-## Why This Project?
-
-### Educational Value
-- **Simple Code**: Easy to understand and modify
-- **Clear Structure**: Organized backend/frontend separation
-- **Real Application**: Practical business problem
-- **Multiple Models**: Compare different algorithms
-
-### Technical Skills
-- Machine Learning model training
-- REST API development
-- Web interface creation
-- Data preprocessing
-- Model evaluation
-
-## Future Improvements
-
-- Add more customer features
-- Include more ML models
-- Add data visualization
-- Implement model tuning
-- Add customer segmentation
-
-## Troubleshooting
-
-**Backend not connecting**: Make sure Flask server is running on port 5000
-
-**Models not found**: Run `python model.py` first to train and save models
-
-**Accuracy not showing**: Check if accuracy.pkl file exists in backend folder
-
-**Frontend errors**: Ensure all dependencies are installed
+| Feature | Description |
+|---------|-------------|
+| `age` | Customer age (18–100) |
+| `tenure` | Months with company |
+| `monthly_charges` | Monthly bill amount ($) |
+| `churn` | Target: Yes / No |
 
 ---
 
