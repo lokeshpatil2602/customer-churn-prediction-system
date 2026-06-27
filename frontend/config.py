@@ -1,12 +1,20 @@
 """
-Centralised configuration for the Streamlit frontend.
-Set BACKEND_URL environment variable in production to point at the deployed
-Flask API (e.g. https://your-app.onrender.com).
+Centralised backend URL config.
+Priority:
+  1. Streamlit secrets (st.secrets) — used on Streamlit Cloud
+  2. BACKEND_URL environment variable — used on Railway / Docker
+  3. Localhost fallback — used for local development
 """
-
 import os
 
-# Backend API base URL
-# - Locally:     http://localhost:5000
-# - On Render:   set BACKEND_URL env var to https://churn-backend.onrender.com
-BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:5000")
+def get_backend_url():
+    # Try Streamlit secrets first (Streamlit Cloud deployment)
+    try:
+        import streamlit as st
+        return st.secrets["BACKEND_URL"]
+    except Exception:
+        pass
+    # Fall back to environment variable or localhost
+    return os.environ.get("BACKEND_URL", "http://localhost:5000")
+
+BACKEND_URL = get_backend_url()

@@ -1,3 +1,6 @@
+# Streamlit secrets (never commit)
+frontend/.streamlit/secrets.toml
+
 # Python
 __pycache__/
 *.pyc
